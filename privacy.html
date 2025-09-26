@@ -1,63 +1,16 @@
-const express = require("express");
-
-// Create an Express app
-const app = express();
-
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-// Set port and verify_token
-const port = process.env.PORT || 3000;
-const verifyToken = process.env.VERIFY_TOKEN;
-
-// Route for GET requests
-app.get('/', (req, res) => {
-  const { 'hub.mode': mode, 'hub.challenge': challenge, 'hub.verify_token': token } = req.query;
-
-  if (mode === 'subscribe' && token === verifyToken) {
-    console.log('WEBHOOK VERIFIED');
-    res.status(200).send(challenge);
-  } else {
-    res.status(403).end();
-  }
-});
-
-
-
-// Route for POST requests
-app.post('/', (req, res) => {
-  const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
-  console.log(`\n\nWebhook received ${timestamp}\n`);
-  console.log(JSON.stringify(req.body, null, 2));
-  res.status(200).end();
-});
-
-
-app.get('/privacy', (req, res) => {
-  res.type('html').send(privacy);
-});
-
-
-// Start the server
-const server = app.listen(port, () => console.log(`Chatapp listening on port ${port}!`));
-
-server.keepAliveTimeout = 120 * 1000;
-server.headersTimeout = 120 * 1000;
-
-const privacy = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - ChatBank</title>
+    <title>Privacy Policy - [Your App/Website Name]</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f8f9fa;">
     <!-- Header Section -->
     <header style="background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 2rem 1rem; text-align: center;">
         <div style="max-width: 1200px; margin: 0 auto;">
             <h1 style="margin: 0; font-size: 2.5rem; font-weight: 600;">Privacy Policy</h1>
-            <p style="font-size: 1.2rem; margin-top: 0.5rem; opacity: 0.9;">ChatBank</p>
+            <p style="font-size: 1.2rem; margin-top: 0.5rem; opacity: 0.9;">[Your App/Website Name]</p>
             <p style="font-size: 1rem; margin-top: 0.5rem; opacity: 0.8;">Last Updated: <span id="currentDate">[Date]</span></p>
         </div>
     </header>
@@ -66,7 +19,7 @@ const privacy = `
     <main style="max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem;">
         <!-- Introduction -->
         <section style="background: white; border-radius: 8px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-            <p>At <strong>ChatBank</strong>, we respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our <strong>service</strong> (the "Service").</p>
+            <p>At <strong>[Your Company Name]</strong>, we respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our <strong>[website/application/service]</strong> (the "Service").</p>
             <p>We believe in transparency and giving you control over your data. We will never sell your personal data to third parties.</p>
         </section>
 
@@ -155,7 +108,7 @@ const privacy = `
                     <li><strong>Data Portability:</strong> You can request a copy of your data in a structured, machine-readable format.</li>
                     <li><strong>Objection:</strong> You can object to our processing of your personal data.</li>
                 </ul>
-                <p>To exercise any of these rights, please contact us at <a href="mailto:jigga.e10@gmail.com" style="color: #3498db; text-decoration: none;">jigga.e10@gmail.com</a>. We will respond to your request within a reasonable timeframe and in accordance with applicable law.</p>
+                <p>To exercise any of these rights, please contact us at <a href="mailto:[Your Privacy Contact Email]" style="color: #3498db; text-decoration: none;">[Your Privacy Contact Email]</a>. We will respond to your request within a reasonable timeframe and in accordance with applicable law.</p>
             </section>
 
             <!-- Section 8 -->
@@ -181,8 +134,8 @@ const privacy = `
                 <h2 style="color: #2c3e50; margin-top: 0; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem;">11. Contact Us</h2>
                 <p>If you have any questions about this Privacy Policy or our data practices, please contact us at:</p>
                 <ul>
-                    <li><strong>Email:</strong> <a href="mailto:jigga.e10@gmail.com" style="color: #3498db; text-decoration: none;">jigga.e10@gmail.com</a></li>
-
+                    <li><strong>Email:</strong> <a href="mailto:[Your Privacy Contact Email]" style="color: #3498db; text-decoration: none;">[Your Privacy Contact Email]</a></li>
+                    <li><strong>Address:</strong> [Your Company Address, if applicable]</li>
                 </ul>
             </section>
         </div>
@@ -191,7 +144,7 @@ const privacy = `
     <!-- Footer -->
     <footer style="background: #2c3e50; color: white; text-align: center; padding: 1.5rem; margin-top: 2rem;">
         <div style="max-width: 1000px; margin: 0 auto;">
-            <p style="margin: 0; opacity: 0.8;">&copy; <span id="currentYear">2025</span> ChatBank. All rights reserved.</p>
+            <p style="margin: 0; opacity: 0.8;">&copy; <span id="currentYear">2023</span> [Your Company Name]. All rights reserved.</p>
             <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; opacity: 0.7;">Your privacy is important to us.</p>
         </div>
     </footer>
@@ -208,4 +161,3 @@ const privacy = `
     </script>
 </body>
 </html>
-`;
